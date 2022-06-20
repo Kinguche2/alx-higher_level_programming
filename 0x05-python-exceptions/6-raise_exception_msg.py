@@ -3,5 +3,5 @@ def raise_exception():
     try:
         exe = white
         print("{:d}".format(exe))
-    except NameError:
-        print('error')
+    except NameError as ne:
+        print(ne)
