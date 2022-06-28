@@ -1,129 +1,123 @@
 #!/usr/bin/python3
+""" defines a nqueens"""
+
 import sys
 
-"""
-Solves the N queens puzzle, which is the challenge of placing N non-attacking
-queens on an NxN chessboard.
-"""
+
+def init_board(n):
+    """Initialize an `n`x`n` sized chessboard with 0's."""
+    board = []
+    [board.append([]) for i in range(n)]
+    [row.append(' ') for i in range(n) for row in board]
+    return (board)
 
 
-def main():
-    """Program starts here
-    Basic error checking for passed argument is done before the puzzle is
-    solved.
+def board_deepcopy(board):
+    """Return a deepcopy of a chessboard."""
+    if isinstance(board, list):
+        return list(map(board_deepcopy, board))
+    return (board)
+
+
+def get_solution(board):
+    """Return the list of lists representation of a solved chessboard."""
+    solution = []
+    for r in range(len(board)):
+        for c in range(len(board)):
+            if board[r][c] == "Q":
+                solution.append([r, c])
+                break
+    return (solution)
+
+
+def xout(board, row, col):
+    """X out spots on a chessboard.
+    All spots where non-attacking queens can no
+    longer be played are X-ed out.
+    Args:
+        board (list): The current working chessboard.
+        row (int): The row where a queen was last played.
+        col (int): The column where a queen was last played.
     """
+    # X out all forward spots
+    for c in range(col + 1, len(board)):
+        board[row][c] = "x"
+    # X out all backwards spots
+    for c in range(col - 1, -1, -1):
+        board[row][c] = "x"
+    # X out all spots below
+    for r in range(row + 1, len(board)):
+        board[r][col] = "x"
+    # X out all spots above
+    for r in range(row - 1, -1, -1):
+        board[r][col] = "x"
+    # X out all spots diagonally down to the right
+    c = col + 1
+    for r in range(row + 1, len(board)):
+        if c >= len(board):
+            break
+        board[r][c] = "x"
+        c += 1
+    # X out all spots diagonally up to the left
+    c = col - 1
+    for r in range(row - 1, -1, -1):
+        if c < 0:
+            break
+        board[r][c]
+        c -= 1
+    # X out all spots diagonally up to the right
+    c = col + 1
+    for r in range(row - 1, -1, -1):
+        if c >= len(board):
+            break
+        board[r][c] = "x"
+        c += 1
+    # X out all spots diagonally down to the left
+    c = col - 1
+    for r in range(row + 1, len(board)):
+        if c < 0:
+            break
+        board[r][c] = "x"
+        c -= 1
+
+
+def recursive_solve(board, row, queens, solutions):
+    """Recursively solve an N-queens puzzle.
+    Args:
+        board (list): The current working chessboard.
+        row (int): The current working row.
+        queens (int): The current number of placed queens.
+        solutions (list): A list of lists of solutions.
+    Returns:
+        solutions
+    """
+    if queens == len(board):
+        solutions.append(get_solution(board))
+        return (solutions)
+
+    for c in range(len(board)):
+        if board[row][c] == " ":
+            tmp_board = board_deepcopy(board)
+            tmp_board[row][c] = "Q"
+            xout(tmp_board, row, c)
+            solutions = recursive_solve(tmp_board, row + 1,
+                                        queens + 1, solutions)
+
+    return (solutions)
+
+
+if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
-        exit(1)
-
-    n_string = sys.argv[1]
-    try:
-        n = int(n_string)
-    except ValueError:
+        sys.exit(1)
+    if sys.argv[1].isdigit() is False:
         print("N must be a number")
-        exit(1)
-
+        sys.exit(1)
     if int(sys.argv[1]) < 4:
         print("N must be at least 4")
-        exit(1)
+        sys.exit(1)
 
-    puzzle_solver(n)
-
-
-def puzzle_solver(n):
-    """
-    Solves the n queen problem with the passed number n, and prints each
-    possible scenario
-    Args:
-        n (int): size of the chessboard and number of queens on the chessboard
-    """
-    iterations = 1
-    first_queen_pos = 0
-
-    while n - iterations >= 2:
-        first_queen_pos += 1
-        iterations += 1
-        chessboard = []
-        possible_positions = []
-
-        for i in range(n):
-            chessboard.append([])
-            for j in range(n):
-                chessboard[i].append(1)
-
-        chessboard = clear_path_for_queen(chessboard, [0, first_queen_pos])
-        possible_positions.append([0, first_queen_pos])
-
-        #  Find the remaining possible positions
-        for i in range(n):
-            for j in range(n):
-                if chessboard[i][j] == 1:
-                    possible_positions.append([i, j]) if [i, j] not in \
-                                                possible_positions else None
-                    chessboard = clear_path_for_queen(chessboard, [i, j])
-
-        print(possible_positions)
-
-
-def clear_path_for_queen(chessboard, pos):
-    """
-    Clears all the 1's in the chessboard as if a queen is attacking from the
-    position
-    Args:
-        chessboard (list of list): an n x n 2D list as a chessboard filled
-        with 1's and 0's, where 1's are possible places to be used and 0's
-        are cleared places (cleared by a queen)
-        pos (list): a list with 2 elements, to specify the queens position
-    Returns:
-        A new chessboard where the queen at position has cleared all
-        possible directions
-    """
-    n = len(chessboard[0])  # number of queens, size of the chessboard
-    #  Clear the horizontal places
-    for i in range(0, n):
-        if pos != [pos[0], i]:
-            chessboard[pos[0]][i] *= 0
-
-    #  Clear the vertical places
-    for i in range(0, n):
-        if pos != [i, pos[1]]:
-            chessboard[i][pos[1]] *= 0
-
-    #  Clear the diagonals
-    i = pos[0] - 1
-    j = pos[1] - 1
-
-    #  Clear the left corner diagonals
-    while i > -1 and j > -1:
-        chessboard[i][j] *= 0
-        i -= 1
-        j -= 1
-
-    i = pos[0] + 1
-    j = pos[1] - 1
-
-    #  Clear the right corner diagonals
-    while i < n and j > -1:
-        chessboard[i][j] *= 0
-        i += 1
-        j -= 1
-
-    i = pos[0] + 1
-    j = pos[1] + 1
-
-    #  Clear the right bottom diagonals
-    while i < n and j < n:
-        chessboard[i][j] *= 0
-        i += 1
-        j += 1
-
-    i = pos[0] - 1
-    j = pos[1] + 1
-
-    #  Clear the left bottom diagonals
-    while i > -1 and j < n:
-        chessboard[i][j] *= 0
-        i -= 1
-        j += 1
-
-    return chessboard
+    board = init_board(int(sys.argv[1]))
+    solutions = recursive_solve(board, 0, 0, [])
+    for sol in solutions:
+        print(sol)
