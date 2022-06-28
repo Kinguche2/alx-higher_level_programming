@@ -1,65 +1,89 @@
 #!/usr/bin/python3
-'''N Queens Problem'''
+""" defines a Rectangle class"""
 
 
-def validation(chessboard, row, column):
-    '''validates current position to see if its available
-       vs the queens already set on the columns to the left.
-    Args:
-        chessboard: actual state of the game.
-        row: row to validate.
-        column: column to validate.
-    '''
-    for col in range(column):
-        # checks if there is no queen in the row or diagonal
-        if (chessboard[col] == row or
-                # checks the slope:
-                abs(col - column) == abs(chessboard[col] - row)):
-            return False
-    return True
+class Rectangle:
+    """Rectangle Class"""
+    number_of_instances = 0
+    print_symbol = '#'
 
+    def __init__(self, width=0, height=0):
+        """ Init Method """
+        self.width = width
+        self.height = height
+        Rectangle.number_of_instances += 1
 
-def backtracking(chessboard, column):
-    '''backtracking application.
-    Args:
-        chessboard: actual state of the game.
-        column: the colum to backtrack,
-    '''
-    q = len(chessboard)
-    # when all the queens are set and the validation is True,
-    # prints the solution
-    if column == q:
-        solution = []
-        for col in range(q):
-            solution.append([col, chessboard[col]])
-        print(solution)
-        return
+    @property
+    def width(self):
+        """getter def"""
+        return self.__width
 
-    for row in range(q):
-        # if validation is True, a new queen is set and start to test a new one
-        if validation(chessboard, row, column):
-            chessboard[column] = row
-            backtracking(chessboard, column + 1)
+    @width.setter
+    def width(self, value):
+        """setter def"""
+        if type(value) is not int:
+            raise TypeError('width must be an integer')
+        if value < 0:
+            raise ValueError('width must be >= 0')
+        self.__width = value
 
-if __name__ == "__main__":
-    import sys
+    @property
+    def height(self):
+        """getter def"""
+        return self.__height
 
-    if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-    q = 0
-    try:
-        q = int(sys.argv[1])
-    except:
-        print("N must be a number")
-        sys.exit(1)
-    if q < 4:
-        print("N must be at least 4")
-        sys.exit(1)
+    @height.setter
+    def height(self, value):
+        """setter def"""
+        if type(value) is not int:
+            raise TypeError('height must be an integer')
+        if value < 0:
+            raise ValueError('height must be >= 0')
+        self.__height = value
 
-    # Creation of the chessboard
-    chessboard = []
-    for col in range(q):
-        chessboard.append(col)
-    # starts the seeking of the solution in the first column
-    backtracking(chessboard, 0)
+    def area(self):
+        """define area def"""
+        return self.__width * self.__height
+
+    def perimeter(self):
+        """define perimeter def"""
+        if self.__width == 0 or self.__height == 0:
+            return 0
+        return(self.__width * 2) + (self.__height * 2)
+
+    def __str__(self):
+        """define informal print str"""
+        if self.__width == 0 or self.__height == 0:
+            return ""
+        else:
+            hsh = str(self.print_symbol)
+            return ((hsh*self.__width + "\n")*self.__height)[:-1]
+
+    def __repr__(self):
+        """define official print repr"""
+        return 'Rectangle({}, {})'.format(self.__width, self.__height)
+
+    def __del__(self):
+        """define delete method"""
+        Rectangle.number_of_instances -= 1
+        print('Bye rectangle...')
+
+    @staticmethod
+    def bigger_or_equal(rect_1, rect_2):
+        """
+            Biggest Rectangle (Rectangle)
+        """
+        if not isinstance(rect_1, Rectangle):
+            raise TypeError("rect_1 must be an instance of Rectangle")
+        if not isinstance(rect_2, Rectangle):
+            raise TypeError("rect_2 must be an instance of Rectangle")
+        Area1 = rect_1.area()
+        Area2 = rect_2.area()
+        if Area1 >= Area2:
+            return rect_1
+        return rect_2
+
+    @classmethod
+    def square(cls, size=0):
+        """ Returns a new Rectangle instance """
+        return (cls(size, size))
