@@ -50,7 +50,7 @@ if __name__ == "__main__":
     q = 0
     try:
         q = int(sys.argv[1])
-    except BaseException:
+    except:
         print("N must be a number")
         sys.exit(1)
     if q < 4:
