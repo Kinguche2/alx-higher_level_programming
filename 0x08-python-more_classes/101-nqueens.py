@@ -127,7 +127,3 @@ def clear_path_for_queen(chessboard, pos):
         j += 1
 
     return chessboard
-
-
-if __name__ == "__main__":
-    main()
