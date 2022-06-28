@@ -40,7 +40,7 @@ if __name__ == "__main__":
     n = 0
     try:
         n = int(sys.argv[1])
-    except:
+    except BaseException:
         print("N must be a number")
         sys.exit(1)
     if n < 4:
