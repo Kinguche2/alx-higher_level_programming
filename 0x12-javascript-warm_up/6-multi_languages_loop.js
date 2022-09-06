@@ -1,8 +1,5 @@
 #!/usr/bin/node
 const array = ['C is fun', 'Python is cool', 'JavaScript is amazing'];
-for (let i = 0; i < 2; i++) {
-  array[i] = i + 1;
-}
-for (let i = 0; i < array.length; i++) {
+for (let i = 0; i < 3; i++) {
   console.log(array[i]);
 }
