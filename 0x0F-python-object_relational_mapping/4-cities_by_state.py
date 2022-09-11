@@ -12,7 +12,7 @@ if __name__ == '__main__':
     curs = db.cursor()
     curs.execute("SELECT cities.id, cities.name, states.name \
     FROM cities JOIN states ON cities.state_id = states.id;")
-    states = cur.fetchall()
+    states = curs.fetchall()
 
     for state in states:
         print(state)
