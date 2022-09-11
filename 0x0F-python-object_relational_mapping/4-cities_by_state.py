@@ -10,10 +10,9 @@ if __name__ == '__main__':
                          db=sys.argv[3], port=3306)
 
     curs = db.cursor()
-    curs.execute("SELECT * \
-    FROM states \
-    FROM cities;")
-    city = curs.fetchall()
+    curs.execute("SELECT cities.id, cities.name, states.name \
+    FROM cities JOIN states ON cities.state_id = states.id;")
+    states = cur.fetchall()
 
-    for city in cities:
-        print(cities)
+    for state in states:
+        print(state)
