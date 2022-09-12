@@ -6,6 +6,7 @@ import sys
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from model_state import State
+from sqlalchemy import update
 
 if __name__ == '__main__':
     engine = create_engine("mysql+mysqldb://{}:{}@localhost/{}"
@@ -14,6 +15,7 @@ if __name__ == '__main__':
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    for state in session.query(State).filter(State.id == '2').\
-            update({"name": "New Mexico"}, synchronize_session="fetch"):
-        print("{}: {}".format(state.id, state.name))
+    stmt = update(State).where(State.id == "2").values(name="New Mexico").\
+            execution_options(synchronize_session="fetch")
+
+    session.execute(stmt)
