@@ -9,7 +9,6 @@ from sqlalchemy.orm import relationship
 mymetadata = MetaData()
 Base = declarative_base(metadata=mymetadata)
 
-if __name__ == '__main__':
 class State(Base):
     """
     Class with id and name attributes of each state
