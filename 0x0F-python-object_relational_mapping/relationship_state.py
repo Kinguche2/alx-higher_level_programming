@@ -6,6 +6,7 @@ from sqlalchemy import Column, Integer, String, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+if __name__ == '__main__':
 mymetadata = MetaData()
 Base = declarative_base(metadata=mymetadata)
 
