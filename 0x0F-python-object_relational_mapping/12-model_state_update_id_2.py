@@ -15,7 +15,7 @@ if __name__ == '__main__':
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    stmt = update(State).where(State.id == "2").values(name="New Mexico").\
-            execution_options(synchronize_session="fetch")
+    stmt = update(State).where(State.id == 2).values(state.name="New Mexico").
+    execution_options(synchronize_session="fetch")
 
-    session.execute(stmt)
+    session.commit()
