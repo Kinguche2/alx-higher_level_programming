@@ -1,28 +1,14 @@
 #!/usr/bin/python3
-"""[summary]
-    """
-from sqlalchemy import Integer, String, Column, ForeignKey
-from sqlalchemy.orm import relationship
+""" define city model """
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from model_state import Base, State
+from relationship_state import Base, State
 
 
 class City(Base):
-    """[summary]
-    Args:
-    Base ([type]): [description]
-    """
+    """ State class """
+
     __tablename__ = 'cities'
-
-    id = Column(Integer, autoincrement=True, primary_key=True, nullable=False)
-
-    name = Column(String(128), nullable=False)
-
-    state_id = Column(Integer, ForeignKey('states.id'), nullable=False)
-    state = relationship('State')
-
-    def __init__(self, name, state_id, id=None):
-        """ cities constructor """
-        self.id = None
-        self.name = name
-        self.state_id = state_id
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    name = Column("name", String(128), nullable=False)
+    state_id = Column("state_id", Integer, ForeignKey(State.id))
